@@ -5,20 +5,26 @@
 /* the project.                                                               */
 /*----------------------------------------------------------------------------*/
 
-package frc.java;
+package frc.robot;
 
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.Spark;
 import edu.wpi.first.wpilibj.SpeedControllerGroup;
 import edu.wpi.first.wpilibj.TimedRobot;
+import edu.wpi.first.wpilibj.command.Command;
 import edu.wpi.first.wpilibj.command.Scheduler;
+import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import frc.robot.commands.ExampleCommand;
+import frc.robot.subsystems.ExampleSubsystem;
 
+//Kevinlikesbiggay
 
 public class Robot extends TimedRobot {
-	int motor = 0; //motor is frontright
-	int kevingay = 1; //kevingay is backright
-	int calebcewl = 2; //calebcewl is frontleft
-	int kevingaymore = 3; //kevingaymore is backleft
+	int motor = 0;
+	int kevingay = 1;
+	int calebcewl = 2;
+	int kevingaymore = 3;
 	Spark sparkmotor;
 	Spark sparkkevingay;
 	Spark sparkcalebcewl;
@@ -43,7 +49,8 @@ public class Robot extends TimedRobot {
 		sparkcalebcewl = new Spark(calebcewl);
 		sparkkevingaymore = new Spark(kevingaymore);
 
-		sparkmotor.setInverted(true);
+		//sparkmotor.setInverted(true);
+		//sparkcalebcewl.setInverted(true);
 
 		
 		right = new SpeedControllerGroup(sparkkevingay, sparkmotor);
@@ -108,10 +115,26 @@ public class Robot extends TimedRobot {
 		double rightSpeed = y*-0.7;
 		
 		if (x > 0.5) {
-			rightSpeed = 0;
+			rightSpeed = -x*0.4;
+			
+
 		}
 		else if (x < -0.5) {
-			leftSpeed = 0;
+			leftSpeed = x*0.4;
+		}
+
+		if(-0.3 <y && 0.3>y){
+			System.out.println("y is between -0.3 and 0.3");
+			if(x<-0.5){
+				System.out.println("turn left");
+				right.set(0.5);
+				left.set(-0.5);
+			}
+			else if(x>0.5){
+				System.out.println("turn right");
+				left.set(0.5);
+				right.set(-0.5);
+			}
 		}
 
 		left.set(leftSpeed);
