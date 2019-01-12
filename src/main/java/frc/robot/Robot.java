@@ -21,10 +21,10 @@ import org.usfirst.frc.team7052.robot.subsystems.ExampleSubsystem;
 //Kevinlikesbiggay
 
 public class Robot extends TimedRobot {
-	int motor = 0;
-	int kevingay = 1;
-	int calebcewl = 2;
-	int kevingaymore = 3;
+	int motor = 0; //motor is frontright
+	int kevingay = 1; //kevingay is backright
+	int calebcewl = 2; //calebcewl is frontleft
+	int kevingaymore = 3; //kevingaymore is backleft
 	Spark sparkmotor;
 	Spark sparkkevingay;
 	Spark sparkcalebcewl;
@@ -48,10 +48,14 @@ public class Robot extends TimedRobot {
 		sparkkevingay = new Spark(kevingay);
 		sparkcalebcewl = new Spark(calebcewl);
 		sparkkevingaymore = new Spark(kevingaymore);
+
+		sparkmotor.setInverted(true);
+
 		
-		right = new SpeedControllerGroup(sparkkevingay, sparkcalebcewl);
-		left = new SpeedControllerGroup(sparkmotor,sparkkevingaymore);
+		right = new SpeedControllerGroup(sparkkevingay, sparkmotor);
+		left = new SpeedControllerGroup(sparkcalebcewl,sparkkevingaymore);
 		
+
 		
 		
 		joystick = new Joystick(0);
@@ -106,8 +110,8 @@ public class Robot extends TimedRobot {
 		double y = -joystick.getRawAxis(1);
 		double x = joystick.getRawAxis(0);
 
-		double leftSpeed = y;
-		double rightSpeed = y;
+		double leftSpeed = y*0.7;
+		double rightSpeed = y*-0.7;
 		
 		if (x > 0.5) {
 			rightSpeed = 0;
