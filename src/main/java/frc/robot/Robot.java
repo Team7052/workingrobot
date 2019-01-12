@@ -11,14 +11,8 @@ import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.Spark;
 import edu.wpi.first.wpilibj.SpeedControllerGroup;
 import edu.wpi.first.wpilibj.TimedRobot;
-import edu.wpi.first.wpilibj.command.Command;
 import edu.wpi.first.wpilibj.command.Scheduler;
-import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-import org.usfirst.frc.team7052.robot.commands.ExampleCommand;
-import org.usfirst.frc.team7052.robot.subsystems.ExampleSubsystem;
 
-//Kevinlikesbiggay
 
 public class Robot extends TimedRobot {
 	int motor = 0; //motor is frontright
