@@ -5,7 +5,7 @@
 /* the project.                                                               */
 /*----------------------------------------------------------------------------*/
 
-package frc.java;
+package frc.robot;
 
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.Spark;
@@ -15,10 +15,8 @@ import edu.wpi.first.wpilibj.command.Command;
 import edu.wpi.first.wpilibj.command.Scheduler;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-import org.usfirst.frc.team7052.robot.commands.ExampleCommand;
-import org.usfirst.frc.team7052.robot.subsystems.ExampleSubsystem;
 
-//Kevinlikesbiggay
+//
 
 public class Robot extends TimedRobot {
 	int motor = 0;
@@ -48,12 +46,11 @@ public class Robot extends TimedRobot {
 		sparkkevingay = new Spark(kevingay);
 		sparkcalebcewl = new Spark(calebcewl);
 		sparkkevingaymore = new Spark(kevingaymore);
+
+		
 		
 		right = new SpeedControllerGroup(sparkkevingay, sparkcalebcewl);
 		left = new SpeedControllerGroup(sparkmotor,sparkkevingaymore);
-		
-		
-		
 		joystick = new Joystick(0);
 	}	
 	
