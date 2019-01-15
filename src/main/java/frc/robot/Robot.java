@@ -7,6 +7,8 @@
 
 package frc.robot;
 
+import java.time.Year;
+
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.Spark;
 import edu.wpi.first.wpilibj.SpeedControllerGroup;
@@ -27,6 +29,8 @@ public class Robot extends TimedRobot {
 	Joystick joystick;
 	SpeedControllerGroup left;
 	SpeedControllerGroup right;
+	double currentSpeedLeft;
+	double currentSpeedRight;
 	
 	
 	
@@ -54,6 +58,9 @@ public class Robot extends TimedRobot {
 		right.setInverted(true);
 		
 		joystick = new Joystick(0);
+
+		currentSpeedLeft = 0;
+		currentSpeedRight = 0; 
 	}	
 	
 	@Override
@@ -89,19 +96,31 @@ public class Robot extends TimedRobot {
 	public void teleopPeriodic() {
 		
 		Scheduler.getInstance().run();
-		double y = -joystick.getRawAxis(1);
-		double x = joystick.getRawAxis(0);
+		double y = -joystick.getRawAxis(0);
+		double x = joystick.getRawAxis(1);
+		double v = joystick.getRawAxis(3); //right
+		double w = joystick.getRawAxis(2); //left
 
 		//double leftSpeed = Math.atan(y) * 1.27;
 		//double rightSpeed = Math.atan(y) * 1.27;
-		double leftSpeed = Math.pow(y, 3);
-		double rightSpeed = Math.pow(y, 3);
+		double leftSpeed = y * y * y;
+		double rightSpeed = y * y * y;
+		// if v = 1, and w = 1
+		if (v > 0.1) {
+			leftSpeed = v;
+		} 	rightSpeed = v;
+
+		 if (w > 0.1) {
+			leftSpeed = -w;
+			rightSpeed = -w;
+		}
+	
 
 		if (x > 0.5) {
-			rightSpeed = -x*0.9;
+			rightSpeed = x*0.5;
 		}
 		else if (x < -0.5) {
-			leftSpeed = x*0.9;
+			leftSpeed = -x*0.5;
 		}
 
 		if(-0.3 <y && 0.3>y){
@@ -117,11 +136,12 @@ public class Robot extends TimedRobot {
 				rightSpeed = -0.5;
 			}
 		}
-
-		System.out.println(leftSpeed + " " + rightSpeed);
-
-		left.set(leftSpeed);
-		right.set(rightSpeed);
+		double finalLeftSpeed = bufferSpeedLeft(currentSpeedLeft, leftSpeed);
+		double finalRightSpeed = bufferSpeedRight(currentSpeedRight, rightSpeed);
+		left.set(finalLeftSpeed);
+		right.set(finalRightSpeed);
+		currentSpeedLeft = finalLeftSpeed;
+		currentSpeedRight = finalRightSpeed;
 	
 	
 
@@ -130,5 +150,44 @@ public class Robot extends TimedRobot {
 
 	@Override
 	public void testPeriodic() {
+	}
+
+
+
+
+
+	public double bufferSpeedLeft(double currentSpeedLeft, double desiredSpeedLeft){
+		double speedIncrement=desiredSpeedLeft;
+		if(Math.abs(desiredSpeedLeft-currentSpeedLeft)>0.01){
+			if(desiredSpeedLeft>currentSpeedLeft){
+				speedIncrement=currentSpeedLeft+0.01;
+			}
+			if(desiredSpeedLeft<currentSpeedLeft){
+				speedIncrement=currentSpeedLeft-0.01;
+			}
+		}
+		if(Math.abs(desiredSpeedLeft-currentSpeedLeft)<0.01){
+			speedIncrement=desiredSpeedLeft;
+		}
+
+		return speedIncrement;
+		
+	}
+
+	public double bufferSpeedRight(double currentSpeedRight, double desiredSpeedRight){
+		double speedIncrement=desiredSpeedRight;
+		if(Math.abs(desiredSpeedRight-currentSpeedRight)>0.01){
+			if(desiredSpeedRight>currentSpeedRight){
+				speedIncrement=currentSpeedRight+0.01;
+			}
+			if(desiredSpeedRight<currentSpeedRight){
+				speedIncrement=currentSpeedRight-0.01;
+			}
+		}
+		if(Math.abs(desiredSpeedRight-currentSpeedRight)<0.01){
+			speedIncrement=desiredSpeedRight;
+		}
+
+		return speedIncrement;
 	}
 }
