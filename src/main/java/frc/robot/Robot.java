@@ -54,7 +54,9 @@ public class Robot extends TimedRobot {
 		right.setInverted(true);
 		
 		joystick = new Joystick(0);
-	}	
+	}
+
+
 	
 	@Override
 	public void disabledInit() {
@@ -89,13 +91,25 @@ public class Robot extends TimedRobot {
 	public void teleopPeriodic() {
 		
 		Scheduler.getInstance().run();
-		double y = -joystick.getRawAxis(1);
-		double x = joystick.getRawAxis(0);
+		double y = -joystick.getRawAxis(0);
+		double x = joystick.getRawAxis(1);
+		double v = joystick.getRawButton(7) ? 0.6 : 0;
+		double w = joystick.getRawButton(6) ? 0.6 : 0;
 
 		//double leftSpeed = Math.atan(y) * 1.27;
 		//double rightSpeed = Math.atan(y) * 1.27;
-		double leftSpeed = Math.pow(y, 3);
-		double rightSpeed = Math.pow(y, 3);
+		double leftSpeed = y * y * y;
+		double rightSpeed = y * y * y;
+		// if v = 1, and w = 1
+		if (v > 0.1) {
+			leftSpeed = v;
+		} 	rightSpeed = v;
+
+		 if (w > 0.1) {
+			leftSpeed = -w;
+			rightSpeed = -w;
+		}
+
 
 		if (x > 0.5) {
 			rightSpeed = -x*0.9;
