@@ -27,6 +27,8 @@ public class Robot extends TimedRobot {
 	Joystick joystick;
 	SpeedControllerGroup left;
 	SpeedControllerGroup right;
+
+	Spark armMotor;
 	
 	
 	
@@ -47,11 +49,13 @@ public class Robot extends TimedRobot {
 		//sparkmotor.setInverted(true);
 		//sparkcalebcewl.setInverted(true);
 
-		right = new SpeedControllerGroup(sparkkevingay, sparkmotor);
-		left = new SpeedControllerGroup(sparkcalebcewl,sparkkevingaymore);
+		//right = new SpeedControllerGroup(sparkkevingay, sparkmotor);
+		//left = new SpeedControllerGroup(sparkcalebcewl,sparkkevingaymore);
+
+		armMotor = new Spark(5);
 		
 
-		right.setInverted(true);
+		//right.setInverted(true);
 		
 		joystick = new Joystick(0);
 	}	
@@ -89,7 +93,14 @@ public class Robot extends TimedRobot {
 	public void teleopPeriodic() {
 		
 		Scheduler.getInstance().run();
-		double y = -joystick.getRawAxis(1);
+
+		boolean l1 = joystick.getRawButton(1); // l1
+		boolean r1 = joystick.getRawButton(4); // r1
+		System.out.println(l1 + " " + r1);
+		if (l1 && !r1) armMotor.set(1.0);
+		else if (r1 && !l1) armMotor.set(-1.0);
+		else armMotor.set(0);
+		/*double y = -joystick.getRawAxis(1);
 		double x = joystick.getRawAxis(0);
 
 		//double leftSpeed = Math.atan(y) * 1.27;
@@ -122,7 +133,7 @@ public class Robot extends TimedRobot {
 
 		left.set(leftSpeed);
 		right.set(rightSpeed);
-	
+		*/
 	
 
 	}	
