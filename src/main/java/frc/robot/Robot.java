@@ -99,21 +99,15 @@ public class Robot extends TimedRobot {
 		double y = -joystick.getRawAxis(0);
 		double x = joystick.getRawAxis(1);
 		double v = joystick.getRawAxis(3); //right
-		double w = joystick.getRawAxis(2); //left
+		double w = -joystick.getRawAxis(2); //left
 
 		//double leftSpeed = Math.atan(y) * 1.27;
 		//double rightSpeed = Math.atan(y) * 1.27;
-		double leftSpeed = y * y * y;
-		double rightSpeed = y * y * y;
+		double leftSpeed = y;
+		double rightSpeed = y;
 		// if v = 1, and w = 1
-		if (v > 0.1) {
-			leftSpeed = v;
-		} 	rightSpeed = v;
-
-		 if (w > 0.1) {
-			leftSpeed = -w;
-			rightSpeed = -w;
-		}
+		leftSpeed = v+w;
+		rightSpeed = v+w;
 	
 
 		if (x > 0.5) {
@@ -136,12 +130,12 @@ public class Robot extends TimedRobot {
 				rightSpeed = -0.5;
 			}
 		}
-		double finalLeftSpeed = bufferSpeedLeft(currentSpeedLeft, leftSpeed);
-		double finalRightSpeed = bufferSpeedRight(currentSpeedRight, rightSpeed);
+		double finalLeftSpeed = bufferSpeedLeft(this.currentSpeedLeft, leftSpeed);
+		double finalRightSpeed = bufferSpeedRight(this.currentSpeedRight, rightSpeed);
 		left.set(finalLeftSpeed);
 		right.set(finalRightSpeed);
-		currentSpeedLeft = finalLeftSpeed;
-		currentSpeedRight = finalRightSpeed;
+		this.currentSpeedLeft = finalLeftSpeed;
+		this.currentSpeedRight = finalRightSpeed;
 	
 	
 
@@ -158,15 +152,15 @@ public class Robot extends TimedRobot {
 
 	public double bufferSpeedLeft(double currentSpeedLeft, double desiredSpeedLeft){
 		double speedIncrement=desiredSpeedLeft;
-		if(Math.abs(desiredSpeedLeft-currentSpeedLeft)>0.01){
+		if(Math.abs(desiredSpeedLeft-currentSpeedLeft)>0.1){
 			if(desiredSpeedLeft>currentSpeedLeft){
-				speedIncrement=currentSpeedLeft+0.01;
+				speedIncrement=currentSpeedLeft+0.1;
 			}
 			if(desiredSpeedLeft<currentSpeedLeft){
-				speedIncrement=currentSpeedLeft-0.01;
+				speedIncrement=currentSpeedLeft-0.1;
 			}
 		}
-		if(Math.abs(desiredSpeedLeft-currentSpeedLeft)<0.01){
+		if(Math.abs(desiredSpeedLeft-currentSpeedLeft)<0.1){
 			speedIncrement=desiredSpeedLeft;
 		}
 
@@ -176,15 +170,15 @@ public class Robot extends TimedRobot {
 
 	public double bufferSpeedRight(double currentSpeedRight, double desiredSpeedRight){
 		double speedIncrement=desiredSpeedRight;
-		if(Math.abs(desiredSpeedRight-currentSpeedRight)>0.01){
+		if(Math.abs(desiredSpeedRight-currentSpeedRight)>0.1){
 			if(desiredSpeedRight>currentSpeedRight){
-				speedIncrement=currentSpeedRight+0.01;
+				speedIncrement=currentSpeedRight+0.1;
 			}
 			if(desiredSpeedRight<currentSpeedRight){
-				speedIncrement=currentSpeedRight-0.01;
+				speedIncrement=currentSpeedRight-0.1;
 			}
 		}
-		if(Math.abs(desiredSpeedRight-currentSpeedRight)<0.01){
+		if(Math.abs(desiredSpeedRight-currentSpeedRight)<0.1){
 			speedIncrement=desiredSpeedRight;
 		}
 
