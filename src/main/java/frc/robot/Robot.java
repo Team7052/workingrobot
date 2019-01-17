@@ -7,6 +7,8 @@
 
 package frc.robot;
 
+import java.time.Year;
+
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.Spark;
 import edu.wpi.first.wpilibj.SpeedControllerGroup;
@@ -30,7 +32,8 @@ public class Robot extends TimedRobot {
 
 	Spark armMotor;
 	
-	
+	double currentSpeedLeft = 0;
+	double currentSpeedRight = 0;
 	
 	
 	
@@ -49,15 +52,15 @@ public class Robot extends TimedRobot {
 		//sparkmotor.setInverted(true);
 		//sparkcalebcewl.setInverted(true);
 
-		//right = new SpeedControllerGroup(sparkkevingay, sparkmotor);
-		//left = new SpeedControllerGroup(sparkcalebcewl,sparkkevingaymore);
+		right = new SpeedControllerGroup(sparkkevingay, sparkmotor);
+		left = new SpeedControllerGroup(sparkcalebcewl,sparkkevingaymore);		
 
-		armMotor = new Spark(5);
-		
-
-		//right.setInverted(true);
+		right.setInverted(true);
 		
 		joystick = new Joystick(0);
+
+		currentSpeedLeft = 0;
+		currentSpeedRight = 0; 
 	}	
 	
 	@Override
@@ -93,47 +96,47 @@ public class Robot extends TimedRobot {
 	public void teleopPeriodic() {
 		
 		Scheduler.getInstance().run();
-
-		boolean l1 = joystick.getRawButton(1); // l1
-		boolean r1 = joystick.getRawButton(4); // r1
-		System.out.println(l1 + " " + r1);
-		if (l1 && !r1) armMotor.set(1.0);
-		else if (r1 && !l1) armMotor.set(-1.0);
-		else armMotor.set(0);
-		/*double y = -joystick.getRawAxis(1);
-		double x = joystick.getRawAxis(0);
+		double x = -joystick.getRawAxis(0);
+		double y = joystick.getRawAxis(1);
+		double v = joystick.getRawAxis(3); //right
+		double w = -joystick.getRawAxis(2); //left
 
 		//double leftSpeed = Math.atan(y) * 1.27;
 		//double rightSpeed = Math.atan(y) * 1.27;
-		double leftSpeed = Math.pow(y, 3);
-		double rightSpeed = Math.pow(y, 3);
+		double leftSpeed = 0;
+		double rightSpeed = 0;
+		// if v = 1, and w = 1
+		leftSpeed = v+w;
+		rightSpeed = v+w;
+	
 
-		if (x > 0.5) {
-			rightSpeed = -x*0.9;
+		if (x > 0.1) {
+			rightSpeed = rightSpeed * 0.3;
 		}
-		else if (x < -0.5) {
-			leftSpeed = x*0.9;
+		else if (x < -0.1) {
+			leftSpeed = leftSpeed * 0.3;
 		}
 
-		if(-0.3 <y && 0.3>y){
+		if(-0.1 <y && 0.1>y){
 			//System.out.println("y is between -0.3 and 0.3");
 			if(x<-0.5){
 				//System.out.println("turn left");
-				rightSpeed = 0.5;
-				leftSpeed = -0.5;
+				rightSpeed = -0.4;
+				leftSpeed = 0.4;
 			}
 			else if(x>0.5){
 				//System.out.println("turn right");
-				leftSpeed = 0.5;
-				rightSpeed = -0.5;
+				leftSpeed = -0.4;
+				rightSpeed = 0.4;
 			}
 		}
-
-		System.out.println(leftSpeed + " " + rightSpeed);
-
-		left.set(leftSpeed);
-		right.set(rightSpeed);
-		*/
+		double finalLeftSpeed = bufferSpeedLeft(this.currentSpeedLeft, leftSpeed);
+		double finalRightSpeed = bufferSpeedLeft(this.currentSpeedRight, rightSpeed);
+		left.set(finalLeftSpeed);
+		right.set(finalRightSpeed);
+		this.currentSpeedLeft = finalLeftSpeed;
+		this.currentSpeedRight = finalRightSpeed;
+	
 	
 
 	}	
@@ -141,5 +144,45 @@ public class Robot extends TimedRobot {
 
 	@Override
 	public void testPeriodic() {
+	}
+
+
+
+
+
+	public double bufferSpeedLeft(double currentSpeedLeft, double desiredSpeedLeft){
+		double speedIncrement=desiredSpeedLeft;
+		double threshold = 0.05;
+		if(Math.abs(desiredSpeedLeft-currentSpeedLeft)>threshold){
+			if(desiredSpeedLeft>currentSpeedLeft){
+				speedIncrement=currentSpeedLeft+threshold;
+			}
+			if(desiredSpeedLeft<currentSpeedLeft){
+				speedIncrement=currentSpeedLeft-threshold;
+			}
+		}
+		if(Math.abs(desiredSpeedLeft-currentSpeedLeft)<0.1){
+			speedIncrement=desiredSpeedLeft;
+		}
+
+		return speedIncrement;
+		
+	}
+
+	public double bufferSpeedRight(double currentSpeedRight, double desiredSpeedRight){
+		double speedIncrement=desiredSpeedRight;
+		if(Math.abs(desiredSpeedRight-currentSpeedRight)>0.1){
+			if(desiredSpeedRight>currentSpeedRight){
+				speedIncrement=currentSpeedRight+0.1;
+			}
+			if(desiredSpeedRight<currentSpeedRight){
+				speedIncrement=currentSpeedRight-0.1;
+			}
+		}
+		if(Math.abs(desiredSpeedRight-currentSpeedRight)<0.1){
+			speedIncrement=desiredSpeedRight;
+		}
+
+		return speedIncrement;
 	}
 }
