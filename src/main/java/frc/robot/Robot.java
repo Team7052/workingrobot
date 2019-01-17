@@ -111,23 +111,23 @@ public class Robot extends TimedRobot {
 	
 
 		if (x > 0.1) {
-			rightSpeed = rightSpeed * 0.3;
+			rightSpeed = rightSpeed*(1+x);
 		}
 		else if (x < -0.1) {
-			leftSpeed = leftSpeed * 0.3;
+			leftSpeed = leftSpeed *(1-x);
 		}
 
-		if(-0.1 <y && 0.1>y){
+		if(0.3> Math.abs(v+w)){
 			//System.out.println("y is between -0.3 and 0.3");
 			if(x<-0.5){
 				//System.out.println("turn left");
-				rightSpeed = -0.4;
-				leftSpeed = 0.4;
+				rightSpeed = -0.5;
+				leftSpeed = 0.5;
 			}
 			else if(x>0.5){
 				//System.out.println("turn right");
-				leftSpeed = -0.4;
-				rightSpeed = 0.4;
+				leftSpeed = -0.5;
+				rightSpeed = 0.5;
 			}
 		}
 		double finalLeftSpeed = bufferSpeedLeft(this.currentSpeedLeft, leftSpeed);
