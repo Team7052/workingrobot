@@ -117,7 +117,7 @@ public class Robot extends TimedRobot {
 			leftSpeed = (leftSpeed *(1-x));
 		}
 
-		if(0.3> Math.abs(v+w)){
+		if(0.2> Math.abs(v+w)){
 			//System.out.println("y is between -0.3 and 0.3");
 			if(x<-0.3){
 				//System.out.println("turn left");
